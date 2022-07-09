@@ -1,115 +1,240 @@
 import {
-  SafeAreaView,
+  Image,
   StyleSheet,
-  ScrollView,
   View,
   Text,
-  StatusBar, 
-  TextInput, 
-  Button,
+  TextInput,
   TouchableOpacity
 } from 'react-native';
-import { useState } from 'react';
+import { useForm, Controller } from "react-hook-form"
+import { useState } from 'react'
 
 
 
 export default function App() {
- const [n1, setN1] = useState('');
- const [n2, setN2] = useState('');
- const [n3, setN3] = useState('');
- const [d, setDef] = useState('');
- const [o, setObs] = useState('');
 
- let calcularDefinitiva =  () => {
+const [deuda, setDeuda] = useState('');
+const [cuota, setCuota] = useState('');
+const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      nombre: '',
+      fecha:'',
+      montoPrestamo:'',
+      tipoPrestamo:'',
+      numCuotas:'',
+      manejo:''
+    }
+  });
+  const onSubmit = ()=>{
 
-  setDef((n1*0.30)+(n2*0.35)+(n3*0.35));
-  let def= (n1*0.30)+(n2*0.35)+(n3*0.35);
-  if (def>= 3){
-    setObs('Es competente');
-  }else if(def>=2 & def<3){
-    setObs('Aún no es competente');
-  }else if(def<2){
-    setObs('Pierde');
-  }
- }
- let limpiar = () => {
-  setN1('');
-  setN2('');
-  setN3('');
-  setDef('');
-  setObs('');
-}
-
+  };
+  const limpiar = () =>{
+      nombre= '';
+      fecha='';
+      montoPrestamo='';
+      tipoPrestamo='';
+      numCuotas='';
+      manejo='';
+      setDeuda('');
+      setCuota('')
+  };
+  
   return (
-    <View>    
-        <Text style={styles.formulario}> Calcule su definitiva: </Text>
-        <View>
-        <Text style={styles.titulo}> Inserte la Nota 1:</Text>
-        <TextInput style={styles.inputs} 
-                  placeholder="Nota 1"
-                  onChangeText={n1=>setN1(n1)}
-                  value ={n1}
-                  />
-        </View>
-        <View>
-        <Text style={styles.titulo}> Inserte la Nota 2:</Text>
-        <TextInput style={styles.inputs} 
-                  placeholder="Nota 2"
-                  onChangeText={n2=>setN2(n2)}
-                  value ={n2}
-                  />
-        </View>
-        <View>
-        <Text style={styles.titulo}> Inserte la Nota 3:</Text>
-        <TextInput style={styles.inputs} 
-                  placeholder="Nota 3"
-                  onChangeText={n3=>setN3(n3)}
-                  value ={n3}
-                  />
-        </View >
-        <Text>{"\n"}</Text>
-        <View style={{flexDirection:'row', justifyContent:'center'}}>
-          <Button style={styles.button}  onPress={calcularDefinitiva} title="Calcular"></Button>
-          <Text>{"       "}</Text>
-          <Button onPress={limpiar} title="Limpiar"></Button>
-        </View>
-        <View>
-        <Text style={styles.formulario}> Su definitiva es: </Text>
-        <TextInput style={styles.inputs} onChangeText={d=>setDef(d)} value={d}></TextInput>
-        <Text style={styles.formulario}> Observación: </Text>
-        <TextInput style={styles.inputs} onChangeText={o=>setObs(o)} value={o}></TextInput>
-        </View>
+    
+    <View style= {{backgroundColor:'#f5f5f5', padding:50, margin:20}}>
+      <View style={{justifyContent:'flex-start', alignItems:'center'}}>
+          <Image style={{width: 200, height: 200,resizeMode: 'stretch',marginTop:20}} source={'https://cdn.pixabay.com/photo/2016/08/10/15/01/credit-cards-1583534_960_720.jpg'}></Image>
+          <Text style={{fontSize: 12,marginTop: 10,fontWeight: '600',padding: 4,paddingRight: 12}}> Calcule su Crédito: </Text>
+      </View> 
+
+      <View style={styles.container}>
+          <Text style={styles.titulo}>Nombre:</Text> 
+          
+          <Controller control={control}
+              rules={{
+              required: true,
+              }}
+              render={({ field: { onChange, onBlur, nombre } }) => (
+                <TextInput
+                  style={styles.campo}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={nombre}
+                />
+              )}
+              name="nombre"
+            />
+            {errors.nombre && <Text style={styles.validacion}>Es requerido</Text>}
+            
+        </View> 
+
+      <View style={styles.container}>
+
+          <Text style={styles.titulo}>Fecha:</Text>
+          <Controller control={control}
+              rules={{
+              required: true,
+              valueAsDate:true
+              }}
+              render={({ field: { onChange, onBlur, fecha } }) => (
+                <TextInput
+                  style={styles.campo}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={fecha}
+                />
+              )}
+              name="fecha"
+            />
+            {errors.fecha && <Text style={styles.validacion}>Es requerido</Text>}
+
+      </View>
+
+      <View style={styles.container}>
+          <Text style={styles.titulo}>Monto de Préstamo:</Text> 
+          <Controller control={control}
+              rules={{
+              required: true,
+              valueAsNumber:true
+              }}
+              render={({ field: { onChange, onBlur, montoPrestamo } }) => (
+                <TextInput
+                  style={styles.campo}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={montoPrestamo}
+                />
+              )}
+              name="montoPrestamo"
+            />
+            {errors.montoPrestamo && <Text style={styles.validacion}>Es requerido</Text>}    
+      </View>
+
+      <View style={styles.container}>          
+
+          <Text style={styles.titulo}>Tipo de Préstamo:</Text>
+          <Controller control={control}
+              rules={{
+              required: true,
+              valueAsNumber:true
+              }}
+              render={({ field: { onChange, onBlur, tipoPrestamo } }) => (
+                <TextInput
+                  style={styles.campo}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={tipoPrestamo}
+                />
+              )}
+              name="tipoPrestamo"
+            />
+            {errors.tipoPrestamo && <Text style={styles.validacion}>Es requerido</Text>}
+
+      </View>
+
+      <View style={styles.container}>
+          <Text style={styles.titulo}>Númeor de cuotas:</Text>
+          <Controller control={control}
+              rules={{
+              required: true,
+              valueAsNumber:true
+              }}
+              render={({ field: { onChange, onBlur, numCuotas } }) => (
+                <TextInput
+                  style={styles.campo}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={numCuotas}
+                />
+              )}
+              name="numCuotas"
+            />
+            {errors.numCuotas && <Text style={styles.validacion}>Es requerido</Text>}
+      </View>   
+
+      <View style={styles.container}>  
+          <Text style={styles.titulo}>Manejo de Tarjeta:</Text>
+          <Controller control={control}
+              rules={{
+              required: true,
+              valueAsNumber:true
+              }}
+              render={({ field: { onChange, onBlur, manejo } }) => (
+                <TextInput
+                  style={styles.campo}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={manejo}
+                />
+              )}
+              name="manejo"
+            />
+            {errors.manejo && <Text style={styles.validacion}>Es requerido</Text>}
+      </View>
+
+      <View style={styles.container}>
+          <Text style={styles.titulo}>Total de Deuda:</Text>
+          <TextInput style={styles.campo} onChangeText={deuda=>setDeuda(deuda)} value={deuda}></TextInput>
+      </View>
+
+      <View style={styles.container}>
+          <Text style={styles.titulo}>Valor de Cuota:</Text>
+          <TextInput style={styles.campo} onChangeText={cuota=>setCuota(cuota)} value={cuota}></TextInput>
+      </View>
+      
+      <View style={styles.container}>
+          <TouchableOpacity title="Submit" onPress={handleSubmit(onSubmit)} style={styles.boton}> 
+              <Text style={styles.letraboton}>
+              Calcular
+              </Text>
+              </TouchableOpacity>
+            <TouchableOpacity title="limpiar" onPress={handleSubmit(limpiar)} style={styles.boton}> 
+              <Text style={styles.letraboton}>
+                  Limpiar</Text>
+            </TouchableOpacity>
+       </View>
     </View>
   )
 };
 
 const styles = StyleSheet.create({
-  button:{
-  },
-  formulario: {
-    fontSize: 18,
-    marginTop: 20,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'center',
+  container: {
+    flexDirection: 'row',
+    justifyContent:'center',
   },
   titulo: {
-    fontSize: 12,
-    marginTop: 20,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'center',
+    fontSize: 16,
+    padding:20,
+    
   },
-  inputs: {
-    fontSize: 18,
-    textAlign:'center',
-    marginLeft: 50,
-    marginRight: 50, 
-    fontWeight: '600',
+  campo:{
+    ackgroundColor: '#fff',
+    borderColor: '#007aff',
+    fontSize: 16,
     borderWidth: 1,
-    borderRadius: 7,
+    borderRadius: 1,
+    margin:20,
+    
+  },
+  validacion:{
+    fontSize: 10,
+    color:'red',
+    margin:22
+  },
+  boton:{
+      backgroundColor: '#fff',
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: '#007aff',
+      padding:5,
+      margin:20,
+    },
+  letraboton:{
+    alignSelf: 'center',
+    color: '#007aff',
+    fontSize: 16,
+    fontWeight: '600',
+    padding: 10
   }
 
 });
